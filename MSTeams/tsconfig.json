@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+      "esModuleInterop": true,
+      "noImplicitAny": true,
+      "noEmit": true,
+      "resolveJsonModule": true,
+      "allowJs": true,
+      "lib": ["es6"],
+      "target": "es5",
+      "ignoreDeprecations": "5.0",
+      "suppressImplicitAnyIndexErrors": true
+    },
+    "exclude": [
+      "**/**_broken.ts"
+    ]
+  }
+  

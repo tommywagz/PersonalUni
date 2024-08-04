@@ -1,0 +1,74 @@
+{
+    "users": [
+      {
+        "uId": 0,
+        "nameFirst": "tom",
+        "nameLast": "wagz",
+        "email": "emailone@gmail.com",
+        "handleStr": "tomwagz",
+        "password": "bf30338ec01f8815d1a5522cde4a6e2fdbea73f054fe1055c56ccb137754b2e1",
+        "permissionId": 1,
+        "deleted": false,
+        "profileImgUrl": "http://localhost:43201/imgs/banana.jpg"
+      },
+      {
+        "uId": 1,
+        "nameFirst": "tom",
+        "nameLast": "wagner",
+        "email": "emailtwo@gmail.com",
+        "handleStr": "tomwagner",
+        "password": "bf30338ec01f8815d1a5522cde4a6e2fdbea73f054fe1055c56ccb137754b2e1",
+        "permissionId": 2,
+        "deleted": false,
+        "profileImgUrl": "http://localhost:43201/imgs/banana.jpg"
+      },
+      {
+        "uId": 2,
+        "nameFirst": "dan",
+        "nameLast": "wall",
+        "email": "emailthree@gmail.com",
+        "handleStr": "danwall",
+        "password": "bf30338ec01f8815d1a5522cde4a6e2fdbea73f054fe1055c56ccb137754b2e1",
+        "permissionId": 2,
+        "deleted": false,
+        "profileImgUrl": "http://localhost:43201/imgs/banana.jpg"
+      }
+    ],
+    "channels": [],
+    "dms": [
+      {
+        "dmId": 0,
+        "name": "tomwagner, tomwagz",
+        "ownerId": 0,
+        "memberIds": [
+          0,
+          1
+        ]
+      }
+    ],
+    "messages": [],
+    "sessions": [
+      {
+        "token": "b58108ac-2b83-44a2-b401-0d31078b197b",
+        "authUserId": 0
+      },
+      {
+        "token": "d6245e07-9213-4665-83db-21d1d1a76633",
+        "authUserId": 1
+      },
+      {
+        "token": "41d209f3-da14-42f1-8565-098d6fd074bf",
+        "authUserId": 2
+      }
+    ],
+    "reacts": [],
+    "notifications": [
+      {
+        "uId": 1,
+        "channelId": -1,
+        "dmId": 0,
+        "notificationMessage": "tomwagz added you to tomwagner, tomwagz"
+      }
+    ]
+  }
+  
