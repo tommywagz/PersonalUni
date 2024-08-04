@@ -1,0 +1,16 @@
+1521 c_check tide.c
+dcc -o tide main.c $(ls *.c|grep -Ev '(tide|main)\.c') tide.c
+fatal error: error in backend: IO failure on output stream: No space left on device
+fatal error: error in backend: IO failure on output stream: No space left on device
+Test subset1_test5 (tide 2>/dev/null) - could not be run[0m because [31mcompilation failed[0m
+Test subset1_test6 (tide 2>/dev/null) - could not be run[0m because [31mcompilation failed[0m
+Test subset1_test7 (tide 2>/dev/null) - could not be run[0m because [31mcompilation failed[0m
+Test subset1_test8 (tide 2>/dev/null) - could not be run[0m because [31mcompilation failed[0m
+Test subset1_test9 (tide 2>/dev/null) - could not be run[0m because [31mcompilation failed[0m
+Test subset1_test10 (tide 2>/dev/null) - could not be run[0m because [31mcompilation failed[0m
+Test subset1_test11 (tide 2>/dev/null) - could not be run[0m because [31mcompilation failed[0m
+Test subset1_test12 (tide 2>/dev/null) - could not be run[0m because [31mcompilation failed[0m
+Test subset1_test13 (tide 2>/dev/null) - could not be run[0m because [31mcompilation failed[0m
+Test subset1_test14 (tide 2>/dev/null) - could not be run[0m because [31mcompilation failed[0m
+Test subset1_test15 (tide 2>/dev/null) - could not be run[0m because [31mcompilation failed[0m
+[32m0 tests failed[0m  11 tests could not be run

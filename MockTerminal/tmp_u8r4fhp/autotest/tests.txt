@@ -1,0 +1,721 @@
+
+max_cpu = 15
+files = tide.c
+compile_commands = ["dcc -o tide main.c $(ls *.c|grep -Ev '(tide|main)\.c')", "dcc -o tide main.c $(ls *.c|grep -Ev '(tide|main)\.c')"]
+program = tide
+allow_unexpected_stderr = True
+
+
+subset0_test1 description = 'tide 2>/dev/null'
+subset0_test1 command = '1521 tide-examples;cd examples;../tide 2>/dev/null'
+subset0_test1 stdin = 'cd /usr/bin\npwd\nq\n'
+subset0_test1 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> cd /usr/bin
+Moving to /usr/bin
+tide> pwd
+The current directory is: /usr/bin
+tide> q
+Thanks for using tide. Have a nice day!
+"""
+
+subset0_test2 description = 'HOME=/etc tide 2>/dev/null'
+subset0_test2 command = '1521 tide-examples;cd examples;HOME=/etc ../tide 2>/dev/null'
+subset0_test2 stdin = 'cd ~\npwd\nq\n'
+subset0_test2 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> cd ~
+Moving to /etc
+tide> pwd
+The current directory is: /etc
+tide> q
+Thanks for using tide. Have a nice day!
+"""
+
+subset0_test3 description = 'tide 2>/dev/null'
+subset0_test3 command = '1521 tide-examples;cd examples;../tide 2>/dev/null'
+subset0_test3 stdin = 'cd doesnt_exist\nq\n'
+subset0_test3 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> cd doesnt_exist
+Could not change directory.
+tide> q
+Thanks for using tide. Have a nice day!
+"""
+
+subset0_test4 description = 'tide 2>/dev/null'
+subset0_test4 command = '1521 tide-examples;cd examples;../tide 2>/dev/null'
+subset0_test4 stdin = 'cd lorem\nls\ncd ..\ncd ro_dir\nls\ncd ..\nq\n'
+subset0_test4 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> cd lorem
+Moving to lorem
+tide> ls
+drwxrwx---\t.
+drwxrwx---\t..
+-rw-rw----\tipsum.txt
+tide> cd ..
+Moving to ..
+tide> cd ro_dir
+Moving to ro_dir
+tide> ls
+drwxr-x---\t.
+drwxrwx---\t..
+-rw-r-----\tempty.txt
+tide> cd ..
+Moving to ..
+tide> q
+Thanks for using tide. Have a nice day!
+"""
+
+subset1_test5 description = 'tide 2>/dev/null'
+subset1_test5 command = '1521 tide-examples;cd examples;../tide 2>/dev/null'
+subset1_test5 stdin = 't lorem.txt\nt a\nt lorem/ipsum.txt\nt forbidden\nt ro_dir/empty.txt\nt lorem\nq\n'
+subset1_test5 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> t lorem.txt
+lorem.txt is encryptable.
+tide> t a
+tide does not support encrypting directories.
+a is not encryptable.
+tide> t lorem/ipsum.txt
+lorem/ipsum.txt is encryptable.
+tide> t forbidden
+tide does not support encrypting directories.
+forbidden is not encryptable.
+tide> t ro_dir/empty.txt
+group does not have permission to write here.
+ro_dir/empty.txt is not encryptable.
+tide> t lorem
+tide does not support encrypting directories.
+lorem is not encryptable.
+tide> q
+Thanks for using tide. Have a nice day!
+"""
+
+subset1_test6 description = 'tide 2>/dev/null'
+subset1_test6 command = '1521 tide-examples;cd examples;../tide 2>/dev/null'
+subset1_test6 stdin = 't doesnt_exist\nq\n'
+subset1_test6 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> t doesnt_exist
+Could not stat file.
+doesnt_exist is not encryptable.
+tide> q
+Thanks for using tide. Have a nice day!
+"""
+
+subset1_test7 description = 'tide 2>/dev/null'
+subset1_test7 command = '1521 tide-examples;cd examples;../tide 2>/dev/null'
+subset1_test7 stdin = 'x doesnt_exist\nq\n'
+subset1_test7 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> x doesnt_exist
+Could not stat file.
+doesnt_exist is not encryptable.
+tide> q
+Thanks for using tide. Have a nice day!
+"""
+
+subset1_test8 description = 'tide 2>/dev/null'
+subset1_test8 command = '1521 tide-examples;cd examples;/bin/echo -n "A" > one_byte.txt; chmod 660 one_byte.txt; ../tide 2>/dev/null; hexdump -C one_byte.txt.xor; rm one_byte.txt'
+subset1_test8 stdin = 'x one_byte.txt\nq\n'
+subset1_test8 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> x one_byte.txt
+tide> q
+Thanks for using tide. Have a nice day!
+00000000  e8                                                |.|
+00000001
+"""
+
+subset1_test9 description = 'tide 2>/dev/null'
+subset1_test9 command = '1521 tide-examples;cd examples;/bin/echo -n "ABCD" > four_byte.txt; chmod 660 four_byte.txt; ../tide 2>/dev/null; hexdump -C four_byte.txt.xor; rm four_byte.txt'
+subset1_test9 stdin = 'x four_byte.txt\nq\n'
+subset1_test9 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> x four_byte.txt
+tide> q
+Thanks for using tide. Have a nice day!
+00000000  e8 eb ea ed                                       |....|
+00000004
+"""
+
+subset1_test10 description = 'tide 2>/dev/null'
+subset1_test10 command = '1521 tide-examples;cd examples;/bin/echo -n "HGFEDCBA" > eight_byte.txt; chmod 660 eight_byte.txt; ../tide 2>/dev/null; hexdump -C eight_byte.txt.xor; rm eight_byte.txt'
+subset1_test10 stdin = 'x eight_byte.txt\nq\n'
+subset1_test10 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> x eight_byte.txt
+tide> q
+Thanks for using tide. Have a nice day!
+00000000  e1 ee ef ec ed ea eb e8                           |........|
+00000008
+"""
+
+subset1_test11 description = 'tide 2>/dev/null'
+subset1_test11 command = '1521 tide-examples;cd examples;/bin/echo -n "abcdefghi" > nine_byte.txt; chmod 660 nine_byte.txt; ../tide 2>/dev/null; hexdump -C nine_byte.txt.xor; rm nine_byte.txt'
+subset1_test11 stdin = 'x nine_byte.txt\nq\n'
+subset1_test11 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> x nine_byte.txt
+tide> q
+Thanks for using tide. Have a nice day!
+00000000  c8 cb ca cd cc cf ce c1  c0                       |.........|
+00000009
+"""
+
+subset1_test12 description = 'tide 2>/dev/null'
+subset1_test12 command = '1521 tide-examples;cd examples;/bin/echo -n "abcdefghijklmnop" > sixteen_byte.txt; chmod 660 sixteen_byte.txt; ../tide 2>/dev/null; hexdump -C sixteen_byte.txt.xor; rm sixteen_byte.txt'
+subset1_test12 stdin = 'x sixteen_byte.txt\nq\n'
+subset1_test12 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> x sixteen_byte.txt
+tide> q
+Thanks for using tide. Have a nice day!
+00000000  c8 cb ca cd cc cf ce c1  c0 c3 c2 c5 c4 c7 c6 d9  |................|
+00000010
+"""
+
+subset1_test13 description = 'tide 2>/dev/null'
+subset1_test13 command = '1521 tide-examples;cd examples;/bin/echo -n "AAAABBBBCCCCDDDDEEEEFFFFGGGGHHH" > thirty_one_byte.txt; chmod 660 thirty_one_byte.txt; ../tide 2>/dev/null; hexdump -C thirty_one_byte.txt.xor; rm thirty_one_byte.txt'
+subset1_test13 stdin = 'x thirty_one_byte.txt\nq\n'
+subset1_test13 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> x thirty_one_byte.txt
+tide> q
+Thanks for using tide. Have a nice day!
+00000000  e8 e8 e8 e8 eb eb eb eb  ea ea ea ea ed ed ed ed  |................|
+00000010  ec ec ec ec ef ef ef ef  ee ee ee ee e1 e1 e1     |...............|
+0000001f
+"""
+
+subset1_test14 description = 'tide 2>/dev/null'
+subset1_test14 command = '1521 tide-examples;cd examples;/bin/echo -n "AAAABBBBCCCCDDDDEEEEFFFFGGGGHHHHI" > thirty_three_byte.txt; chmod 660 thirty_three_byte.txt; ../tide 2>/dev/null; rm thirty_three_byte.txt'
+subset1_test14 stdin = 'x thirty_three_byte.txt\nq\n'
+subset1_test14 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> x thirty_three_byte.txt
+tide> q
+Thanks for using tide. Have a nice day!
+"""
+
+subset1_test15 description = 'tide 2>/dev/null'
+subset1_test15 command = '1521 tide-examples;cd examples;/bin/echo -n "AAAABBBBCCCCDDDDEEEEFFFFGGGGHHHHI" > thirty_three_byte.txt; chmod 660 thirty_three_byte.txt; umask 007; ../tide 2>/dev/null; diff -s thirty_three_byte.txt thirty_three_byte.txt.xor.dec.xor.dec.xor.dec.xor.dec; diff -s thirty_three_byte.txt.xor thirty_three_byte.txt.xor.dec.xor.dec.xor.dec.xor; rm thirty_three_byte.txt*'
+subset1_test15 stdin = 'x thirty_three_byte.txt\nx thirty_three_byte.txt.xor\nx thirty_three_byte.txt.xor.dec\nx thirty_three_byte.txt.xor.dec.xor\nx thirty_three_byte.txt.xor.dec.xor.dec\nx thirty_three_byte.txt.xor.dec.xor.dec.xor\nx thirty_three_byte.txt.xor.dec.xor.dec.xor.dec\nx thirty_three_byte.txt.xor.dec.xor.dec.xor.dec.xor\nx thirty_three_byte.txt.xor.dec.xor.dec.xor.dec.xor.dec\nq\n'
+subset1_test15 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> x thirty_three_byte.txt
+tide> x thirty_three_byte.txt.xor
+tide> x thirty_three_byte.txt.xor.dec
+tide> x thirty_three_byte.txt.xor.dec.xor
+tide> x thirty_three_byte.txt.xor.dec.xor.dec
+tide> x thirty_three_byte.txt.xor.dec.xor.dec.xor
+tide> x thirty_three_byte.txt.xor.dec.xor.dec.xor.dec
+tide> x thirty_three_byte.txt.xor.dec.xor.dec.xor.dec.xor
+tide> x thirty_three_byte.txt.xor.dec.xor.dec.xor.dec.xor.dec
+tide> q
+Thanks for using tide. Have a nice day!
+Files thirty_three_byte.txt and thirty_three_byte.txt.xor.dec.xor.dec.xor.dec.xor.dec are identical
+Files thirty_three_byte.txt.xor and thirty_three_byte.txt.xor.dec.xor.dec.xor.dec.xor are identical
+"""
+
+subset2_test16 description = 'tide 2>/dev/null'
+subset2_test16 command = '1521 tide-examples;cd examples;../tide 2>/dev/null'
+subset2_test16 stdin = 'sn lorem\nq\n'
+subset2_test16 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> sn lorem
+Found in 2 filenames.
+drwxrwx---\t./lorem
+-rw-rw----\t./lorem.txt
+tide> q
+Thanks for using tide. Have a nice day!
+"""
+
+subset2_test17 description = 'tide 2>/dev/null'
+subset2_test17 command = '1521 tide-examples;cd examples;../tide 2>/dev/null'
+subset2_test17 stdin = 'sn db\nq\n'
+subset2_test17 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> sn db
+Found in 2 filenames.
+-rw-rw----\t./a/b/c/d/e/f/here/lies/some-databases/1.db
+-rw-rw----\t./a/b/c/d/e/f/here/lies/some-databases/2.db
+tide> q
+Thanks for using tide. Have a nice day!
+"""
+
+subset2_test18 description = 'tide 2>/dev/null'
+subset2_test18 command = '1521 tide-examples;cd examples;../tide 2>/dev/null'
+subset2_test18 stdin = 'sn .\nq\n'
+subset2_test18 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> sn .
+'.' and '..' are reserved filenames, please search for something else.
+tide> q
+Thanks for using tide. Have a nice day!
+"""
+
+subset2_test19 description = 'tide 2>/dev/null'
+subset2_test19 command = '1521 tide-examples;cd examples;../tide 2>/dev/null'
+subset2_test19 stdin = 'sn ..\nq\n'
+subset2_test19 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> sn ..
+'.' and '..' are reserved filenames, please search for something else.
+tide> q
+Thanks for using tide. Have a nice day!
+"""
+
+subset2_test20 description = 'tide 2>/dev/null'
+subset2_test20 command = '1521 tide-examples;cd examples;../tide 2>/dev/null'
+subset2_test20 stdin = 'sn no-results-here\nq\n'
+subset2_test20 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> sn no-results-here
+Found in 0 filenames.
+tide> q
+Thanks for using tide. Have a nice day!
+"""
+
+subset2_test21 description = 'tide 2>/dev/null'
+subset2_test21 command = '1521 tide-examples;cd examples;../tide 2>/dev/null'
+subset2_test21 stdin = 'sc 3\nthe\nq\n'
+subset2_test21 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> sc 3
+Enter 3 bytes to search for: Found in 1 file.
+60: ./a/b/c/d/e/f/g/h/i/j/fox.txt
+tide> q
+Thanks for using tide. Have a nice day!
+"""
+
+subset2_test22 description = 'tide 2>/dev/null'
+subset2_test22 command = '1521 tide-examples;cd examples;../tide 2>/dev/null'
+subset2_test22 stdin = 'sn 8\nnoresult\nq\n'
+subset2_test22 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> sn 8
+Found in 0 filenames.
+tide> noresult
+Unknown command: noresult
+tide> q
+Thanks for using tide. Have a nice day!
+"""
+
+subset2_test23 description = 'tide 2>/dev/null'
+subset2_test23 command = '1521 tide-examples;cd examples;../tide 2>/dev/null'
+subset2_test23 stdin = 'sf sqlite3_signature\nq\n'
+subset2_test23 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> sf sqlite3_signature
+Found in 4 files.
+1: ./a/b/c/d/e/f/here/lies/even/more/databases/yay.differentfiletype
+1: ./a/b/c/d/e/f/here/lies/some-databases/1.db
+1: ./a/b/c/d/e/f/here/lies/some-databases/2.db
+1: ./sqlite3_signature
+tide> q
+Thanks for using tide. Have a nice day!
+"""
+
+subset3_test24 description = 'tide 2>/dev/null'
+subset3_test24 command = '1521 tide-examples;cd examples;../tide 2>/dev/null'
+subset3_test24 stdin = 'ee non-existent\nde non-existent\nq\n'
+subset3_test24 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> ee non-existent
+Could not stat file.
+non-existent is not encryptable.
+tide> de non-existent
+Enter password (must be exactly 16 bytes): Could not stat file.
+non-existent is not encryptable.
+tide> q
+Thanks for using tide. Have a nice day!
+"""
+
+subset3_test25 description = 'tide 2>/dev/null'
+subset3_test25 command = '1521 tide-examples;cd examples;/bin/echo -n "a" > one_byte.txt; chmod 660 one_byte.txt; ../tide 2>/dev/null; hexdump -C one_byte.txt.ecb; rm one_byte.txt*'
+subset3_test25 stdin = 'ee one_byte.txt\npasswordpassword\nq\n'
+subset3_test25 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> ee one_byte.txt
+Enter password (must be exactly 16 bytes): tide> q
+Thanks for using tide. Have a nice day!
+00000000  61 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |a...............|
+00000010
+"""
+
+subset3_test26 description = 'tide 2>/dev/null'
+subset3_test26 command = '1521 tide-examples;cd examples;/bin/echo -n "ab" > two_byte.txt; chmod 660 two_byte.txt; ../tide 2>/dev/null; hexdump -C two_byte.txt.ecb; rm two_byte.txt*'
+subset3_test26 stdin = 'ee two_byte.txt\npasswordpassword\nq\n'
+subset3_test26 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> ee two_byte.txt
+Enter password (must be exactly 16 bytes): tide> q
+Thanks for using tide. Have a nice day!
+00000000  61 c4 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |a...............|
+00000010
+"""
+
+subset3_test27 description = 'tide 2>/dev/null'
+subset3_test27 command = '1521 tide-examples;cd examples;/bin/echo -n "abc" > three_byte.txt; chmod 660 three_byte.txt; ../tide 2>/dev/null; hexdump -C three_byte.txt.ecb; rm three_byte.txt*'
+subset3_test27 stdin = 'ee three_byte.txt\npasswordpassword\nq\n'
+subset3_test27 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> ee three_byte.txt
+Enter password (must be exactly 16 bytes): tide> q
+Thanks for using tide. Have a nice day!
+00000000  61 c4 1b 00 00 00 00 00  00 00 00 00 00 00 00 00  |a...............|
+00000010
+"""
+
+subset3_test28 description = 'tide 2>/dev/null'
+subset3_test28 command = '1521 tide-examples;cd examples;/bin/echo -n "abcd" > four_byte.txt; chmod 660 four_byte.txt; ../tide 2>/dev/null; hexdump -C four_byte.txt.ecb; rm four_byte.txt*'
+subset3_test28 stdin = 'ee four_byte.txt\npasswordpassword\nq\n'
+subset3_test28 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> ee four_byte.txt
+Enter password (must be exactly 16 bytes): tide> q
+Thanks for using tide. Have a nice day!
+00000000  61 c4 1b 23 00 00 00 00  00 00 00 00 00 00 00 00  |a..#............|
+00000010
+"""
+
+subset3_test29 description = 'tide 2>/dev/null'
+subset3_test29 command = '1521 tide-examples;cd examples;/bin/echo -n "abcdefgh" > eight_byte.txt; chmod 660 eight_byte.txt; ../tide 2>/dev/null; hexdump -C eight_byte.txt.ecb; rm eight_byte.txt*'
+subset3_test29 stdin = 'ee eight_byte.txt\npasswordpassword\nq\n'
+subset3_test29 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> ee eight_byte.txt
+Enter password (must be exactly 16 bytes): tide> q
+Thanks for using tide. Have a nice day!
+00000000  61 c4 1b 23 b2 33 9d 86  00 00 00 00 00 00 00 00  |a..#.3..........|
+00000010
+"""
+
+subset3_test30 description = 'tide 2>/dev/null'
+subset3_test30 command = '1521 tide-examples;cd examples;/bin/echo -n "abcdefghi" > nine_byte.txt; chmod 660 nine_byte.txt; ../tide 2>/dev/null; hexdump -C nine_byte.txt.ecb; rm nine_byte.txt*'
+subset3_test30 stdin = 'ee nine_byte.txt\npasswordpassword\nq\n'
+subset3_test30 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> ee nine_byte.txt
+Enter password (must be exactly 16 bytes): tide> q
+Thanks for using tide. Have a nice day!
+00000000  61 c4 1b 23 b2 33 9d 86  69 00 00 00 00 00 00 00  |a..#.3..i.......|
+00000010
+"""
+
+subset3_test31 description = 'tide 2>/dev/null'
+subset3_test31 command = '1521 tide-examples;cd examples;/bin/echo -n "abcdefghijklmnop" > sixteen_byte.txt; chmod 660 sixteen_byte.txt; ../tide 2>/dev/null; hexdump -C sixteen_byte.txt.ecb; rm sixteen_byte.txt*'
+subset3_test31 stdin = 'ee sixteen_byte.txt\npasswordpassword\nq\n'
+subset3_test31 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> ee sixteen_byte.txt
+Enter password (must be exactly 16 bytes): tide> q
+Thanks for using tide. Have a nice day!
+00000000  61 c4 1b 23 b2 33 9d 86  69 d4 5b 63 b6 37 bd 07  |a..#.3..i.[c.7..|
+00000010
+"""
+
+subset3_test32 description = 'tide 2>/dev/null'
+subset3_test32 command = '1521 tide-examples;cd examples;/bin/echo -n "AAAABBBBCCCCDDDDEEEEFFFFGGGGHHH" > thirty_one_byte.txt; chmod 660 thirty_one_byte.txt; ../tide 2>/dev/null; hexdump -C thirty_one_byte.txt.ecb; rm thirty_one_byte.txt*'
+subset3_test32 stdin = 'ee thirty_one_byte.txt\npasswordpassword\nq\n'
+subset3_test32 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> ee thirty_one_byte.txt
+Enter password (must be exactly 16 bytes): tide> q
+Thanks for using tide. Have a nice day!
+00000000  41 82 0a 0a 21 21 09 24  43 86 1a 1a 22 22 11 44  |A...!!.$C..."".D|
+00000010  45 8a 2a 2a 23 23 19 64  47 8e 3a 3a 24 24 21 00  |E.**##.dG.::$$!.|
+00000020
+"""
+
+subset3_test33 description = 'tide 2>/dev/null'
+subset3_test33 command = '1521 tide-examples;cd examples;/bin/echo -n "AAAABBBBCCCCDDDDEEEEFFFFGGGGHHHHI" > thirty_three_byte.txt; chmod 660 thirty_three_byte.txt; ../tide 2>/dev/null; hexdump -C thirty_three_byte.txt.ecb; rm thirty_three_byte.txt*'
+subset3_test33 stdin = 'ee thirty_three_byte.txt\npasswordpassword\nq\n'
+subset3_test33 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> ee thirty_three_byte.txt
+Enter password (must be exactly 16 bytes): tide> q
+Thanks for using tide. Have a nice day!
+00000000  41 82 0a 0a 21 21 09 24  43 86 1a 1a 22 22 11 44  |A...!!.$C..."".D|
+00000010  45 8a 2a 2a 23 23 19 64  47 8e 3a 3a 24 24 21 84  |E.**##.dG.::$$!.|
+00000020  49 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |I...............|
+00000030
+"""
+
+subset3_test34 description = 'tide 2>/dev/null'
+subset3_test34 command = '1521 tide-examples;cd examples;/bin/echo -n "AAAABBBBCCCCDDDDEEEEFFFFGGGGHHHHI" > thirty_three_byte.txt; chmod 660 thirty_three_byte.txt; umask 007; ../tide 2>/dev/null; hexdump -C thirty_three_byte.txt.ecb; hexdump -C thirty_three_byte.txt.ecb.ecb; rm thirty_three_byte.txt*'
+subset3_test34 stdin = 'ee thirty_three_byte.txt\npasswordpassword\nee thirty_three_byte.txt.ecb\npasswordpassword\nq\n'
+subset3_test34 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> ee thirty_three_byte.txt
+Enter password (must be exactly 16 bytes): tide> ee thirty_three_byte.txt.ecb
+Enter password (must be exactly 16 bytes): tide> q
+Thanks for using tide. Have a nice day!
+00000000  41 82 0a 0a 21 21 09 24  43 86 1a 1a 22 22 11 44  |A...!!.$C..."".D|
+00000010  45 8a 2a 2a 23 23 19 64  47 8e 3a 3a 24 24 21 84  |E.**##.dG.::$$!.|
+00000020  49 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |I...............|
+00000030
+00000000  41 05 50 50 90 90 24 42  43 0d d0 d0 11 11 44 44  |A.PP..$BC.....DD|
+00000010  45 15 51 51 91 91 64 46  47 1d d1 d1 12 12 84 48  |E.QQ..dFG......H|
+00000020  49 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |I...............|
+00000030
+"""
+
+subset3_test35 description = 'tide 2>/dev/null'
+subset3_test35 command = '1521 tide-examples;cd examples;../tide 2>/dev/null; hexdump -C ecb_decrypt/1x1.png.ecb.dec; rm ecb_decrypt/1x1.png.ecb.dec'
+subset3_test35 stdin = 'cd ecb_decrypt\nde 1x1.png.ecb\npasswordpassword\nq\n'
+subset3_test35 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> cd ecb_decrypt
+Moving to ecb_decrypt
+tide> de 1x1.png.ecb
+Enter password (must be exactly 16 bytes): tide> q
+Thanks for using tide. Have a nice day!
+00000000  89 50 4e 47 0d 0a 1a 0a  00 00 00 0d 49 48 44 52  |.PNG........IHDR|
+00000010  00 00 00 01 00 00 00 01  01 03 00 00 00 25 db 56  |.............%.V|
+00000020  ca 00 00 00 03 50 4c 54  45 00 00 00 a7 7a 3d da  |.....PLTE....z=.|
+00000030  00 00 00 01 74 52 4e 53  00 40 e6 d8 66 00 00 00  |....tRNS.@..f...|
+00000040  0a 49 44 41 54 08 d7 63  60 00 00 00 02 00 01 e2  |.IDAT..c`.......|
+00000050  21 bc 33 00 00 00 00 49  45 4e 44 ae 42 60 82 00  |!.3....IEND.B`..|
+00000060
+"""
+
+subset4_test36 description = 'tide 2>/dev/null'
+subset4_test36 command = '1521 tide-examples;cd examples;../tide 2>/dev/null'
+subset4_test36 stdin = 'ec non-existent\ndc non-existent\nq\n'
+subset4_test36 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> ec non-existent
+Could not stat file.
+non-existent is not encryptable.
+tide> dc non-existent
+Could not stat file.
+non-existent is not decryptable.
+tide> q
+Thanks for using tide. Have a nice day!
+"""
+
+subset4_test37 description = 'tide 2>/dev/null'
+subset4_test37 command = '1521 tide-examples;cd examples;/bin/echo -n "a" > one_byte.txt; chmod 660 one_byte.txt; ../tide 2>/dev/null; hexdump -C one_byte.txt.cbc; rm one_byte.txt*'
+subset4_test37 stdin = 'ec one_byte.txt\npasswordpassword\nq\n'
+subset4_test37 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> ec one_byte.txt
+Enter password (must be exactly 16 bytes): tide> q
+Thanks for using tide. Have a nice day!
+00000000  25 64 23 91 34 2c 59 73  43 f0 3b b2 28 ba a9 f4  |%d#.4,YsC.;.(...|
+00000010
+"""
+
+subset4_test38 description = 'tide 2>/dev/null'
+subset4_test38 command = '1521 tide-examples;cd examples;/bin/echo -n "ab" > two_byte.txt; chmod 660 two_byte.txt; ../tide 2>/dev/null; hexdump -C two_byte.txt.cbc; rm two_byte.txt*'
+subset4_test38 stdin = 'ec two_byte.txt\npasswordpassword\nq\n'
+subset4_test38 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> ec two_byte.txt
+Enter password (must be exactly 16 bytes): tide> q
+Thanks for using tide. Have a nice day!
+00000000  25 a0 23 91 34 2c 59 73  43 f0 3b b2 28 ba a9 f4  |%.#.4,YsC.;.(...|
+00000010
+"""
+
+subset4_test39 description = 'tide 2>/dev/null'
+subset4_test39 command = '1521 tide-examples;cd examples;/bin/echo -n "abc" > three_byte.txt; chmod 660 three_byte.txt; ../tide 2>/dev/null; hexdump -C three_byte.txt.cbc; rm three_byte.txt*'
+subset4_test39 stdin = 'ec three_byte.txt\npasswordpassword\nq\n'
+subset4_test39 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> ec three_byte.txt
+Enter password (must be exactly 16 bytes): tide> q
+Thanks for using tide. Have a nice day!
+00000000  25 a0 38 91 34 2c 59 73  43 f0 3b b2 28 ba a9 f4  |%.8.4,YsC.;.(...|
+00000010
+"""
+
+subset4_test40 description = 'tide 2>/dev/null'
+subset4_test40 command = '1521 tide-examples;cd examples;/bin/echo -n "abcd" > four_byte.txt; chmod 660 four_byte.txt; ../tide 2>/dev/null; hexdump -C four_byte.txt.cbc; rm four_byte.txt*'
+subset4_test40 stdin = 'ec four_byte.txt\npasswordpassword\nq\n'
+subset4_test40 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> ec four_byte.txt
+Enter password (must be exactly 16 bytes): tide> q
+Thanks for using tide. Have a nice day!
+00000000  25 a0 38 b2 34 2c 59 73  43 f0 3b b2 28 ba a9 f4  |%.8.4,YsC.;.(...|
+00000010
+"""
+
+subset4_test41 description = 'tide 2>/dev/null'
+subset4_test41 command = '1521 tide-examples;cd examples;/bin/echo -n "abcdefgh" > eight_byte.txt; chmod 660 eight_byte.txt; ../tide 2>/dev/null; hexdump -C eight_byte.txt.cbc; rm eight_byte.txt*'
+subset4_test41 stdin = 'ec eight_byte.txt\npasswordpassword\nq\n'
+subset4_test41 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> ec eight_byte.txt
+Enter password (must be exactly 16 bytes): tide> q
+Thanks for using tide. Have a nice day!
+00000000  25 a0 38 b2 86 1f c4 f5  43 f0 3b b2 28 ba a9 f4  |%.8.....C.;.(...|
+00000010
+"""
+
+subset4_test42 description = 'tide 2>/dev/null'
+subset4_test42 command = '1521 tide-examples;cd examples;/bin/echo -n "abcdefghi" > nine_byte.txt; chmod 660 nine_byte.txt; ../tide 2>/dev/null; hexdump -C nine_byte.txt.cbc; rm nine_byte.txt*'
+subset4_test42 stdin = 'ec nine_byte.txt\npasswordpassword\nq\n'
+subset4_test42 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> ec nine_byte.txt
+Enter password (must be exactly 16 bytes): tide> q
+Thanks for using tide. Have a nice day!
+00000000  25 a0 38 b2 86 1f c4 f5  2a f0 3b b2 28 ba a9 f4  |%.8.....*.;.(...|
+00000010
+"""
+
+subset4_test43 description = 'tide 2>/dev/null'
+subset4_test43 command = '1521 tide-examples;cd examples;/bin/echo -n "abcdefghijklmnop" > sixteen_byte.txt; chmod 660 sixteen_byte.txt; ../tide 2>/dev/null; hexdump -C sixteen_byte.txt.cbc; rm sixteen_byte.txt*'
+subset4_test43 stdin = 'ec sixteen_byte.txt\npasswordpassword\nq\n'
+subset4_test43 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> ec sixteen_byte.txt
+Enter password (must be exactly 16 bytes): tide> q
+Thanks for using tide. Have a nice day!
+00000000  25 a0 38 b2 86 1f c4 f5  2a 24 60 d1 9e 8d 14 f3  |%.8.....*$`.....|
+00000010
+"""
+
+subset4_test44 description = 'tide 2>/dev/null'
+subset4_test44 command = '1521 tide-examples;cd examples;/bin/echo -n "AAAABBBBCCCCDDDDEEEEFFFFGGGGHHH" > thirty_one_byte.txt; chmod 660 thirty_one_byte.txt; ../tide 2>/dev/null; hexdump -C thirty_one_byte.txt.cbc; rm thirty_one_byte.txt*'
+subset4_test44 stdin = 'ec thirty_one_byte.txt\npasswordpassword\nq\n'
+subset4_test44 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> ec thirty_one_byte.txt
+Enter password (must be exactly 16 bytes): tide> q
+Thanks for using tide. Have a nice day!
+00000000  05 e6 29 9b 15 0d 50 57  00 76 21 a8 0a 98 b8 b0  |..)...PW.v!.....|
+00000010  40 47 63 f6 a9 a5 58 11  47 62 33 7f 21 68 c3 0b  |@Gc...X.Gb3.!h..|
+00000020
+"""
+
+subset4_test45 description = 'tide 2>/dev/null'
+subset4_test45 command = '1521 tide-examples;cd examples;/bin/echo -n "AAAABBBBCCCCDDDDEEEEFFFFGGGGHHHHI" > thirty_three_byte.txt; chmod 660 thirty_three_byte.txt; ../tide 2>/dev/null; hexdump -C thirty_three_byte.txt.cbc; rm thirty_three_byte.txt*'
+subset4_test45 stdin = 'ec thirty_three_byte.txt\npasswordpassword\nq\n'
+subset4_test45 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> ec thirty_three_byte.txt
+Enter password (must be exactly 16 bytes): tide> q
+Thanks for using tide. Have a nice day!
+00000000  05 e6 29 9b 15 0d 50 57  00 76 21 a8 0a 98 b8 b0  |..)...PW.v!.....|
+00000010  40 47 63 f6 a9 a5 58 11  47 62 33 7f 21 68 c3 8f  |@Gc...X.Gb3.!h..|
+00000020  09 8e 1b b7 d4 d2 61 11  47 c4 99 fb 90 34 0f f8  |......a.G....4..|
+00000030
+"""
+
+subset4_test46 description = 'tide 2>/dev/null'
+subset4_test46 command = '1521 tide-examples;cd examples;../tide 2>/dev/null; hexdump -C cbc_decrypt/1x1.png.cbc.dec; rm cbc_decrypt/1x1.png.cbc.dec'
+subset4_test46 stdin = 'cd cbc_decrypt\ndc 1x1.png.cbc\npasswordpassword\nq\n'
+subset4_test46 expected_stdout="""\
+Welcome to tide!
+To see what commands are available, type help.
+
+tide> cd cbc_decrypt
+Moving to cbc_decrypt
+tide> dc 1x1.png.cbc
+Enter password (must be exactly 16 bytes): tide> q
+Thanks for using tide. Have a nice day!
+00000000  89 50 4e 47 0d 0a 1a 0a  00 00 00 0d 49 48 44 52  |.PNG........IHDR|
+00000010  00 00 00 01 00 00 00 01  01 03 00 00 00 25 db 56  |.............%.V|
+00000020  ca 00 00 00 03 50 4c 54  45 00 00 00 a7 7a 3d da  |.....PLTE....z=.|
+00000030  00 00 00 01 74 52 4e 53  00 40 e6 d8 66 00 00 00  |....tRNS.@..f...|
+00000040  0a 49 44 41 54 08 d7 63  60 00 00 00 02 00 01 e2  |.IDAT..c`.......|
+00000050  21 bc 33 00 00 00 00 49  45 4e 44 ae 42 60 82 00  |!.3....IEND.B`..|
+00000060
+"""
