@@ -22,7 +22,6 @@ Graph Theory w/ Mapping Algorithms
 
 Object Oriented Programming and Design:
 Satellite System
-Black Craft Game
 
 DataBase Systems:
 Rug Factories

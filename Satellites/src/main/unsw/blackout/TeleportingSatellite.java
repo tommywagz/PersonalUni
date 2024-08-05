@@ -9,7 +9,7 @@ public class TeleportingSatellite extends NormalSatellite {
     public String type = "TeleportingSatellite";
     public double linSpeed = 1000;
     public String supportedDevices[] = {
-            "HandheldDevice", "LaptopDevice", "DesktopDevice"
+        "HandheldDevice", "LaptopDevice", "DesktopDevice"
     };
     public double range = 200000;
     public int byteMemMax = 200;
