@@ -1,0 +1,76 @@
+
+========================================================================
+                          Complexity Analysis
+========================================================================
+
+NOTE:
+- Your time complexities should be in big-O notation.
+- For MsetUnion, MsetIntersection, MsetIncluded and MsetEquals, your
+  time complexities should be in terms of n and m, where n and m are the
+  number of distinct elements in each of the multisets respectively.
+- For MsetMostCommon, your time complexity should be in terms of n and k,
+  where n is the number of distinct elements in the given multiset and k
+  is the given value of k.
+
+
+---------
+MsetUnion
+---------
+
+Worst case time complexity: 
+
+Explanation: 
+
+
+----------------
+MsetIntersection
+----------------
+
+Worst case time complexity: 
+
+Explanation: 
+
+
+------------
+MsetIncluded
+------------
+
+Worst case time complexity: 
+
+Explanation: 
+
+
+----------
+MsetEquals
+----------
+
+Worst case time complexity: 
+
+Explanation: 
+
+
+--------------
+MsetMostCommon
+--------------
+
+Worst case time complexity: 
+
+Explanation: 
+
+
+========================================================================
+               Design Documentation for Cursor Operations
+========================================================================
+
+If you completed the cursor operations, you must explain the design and
+implementation of your solution here.
+
+
+
+
+
+
+
+
+
+
