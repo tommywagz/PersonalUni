@@ -1,0 +1,45 @@
+
+NOTE:
+- Your time complexities should be expressed in big-O notation and be in
+  terms of n, where n is the number of cells in the maze.
+
+============
+  solveBfs
+============
+
+- Worst case time complexity: O(n)
+
+- Explanation: The breadthe first search has a worst case time complexity of 
+O(n) becuase worst case scenario, every node in the maze is visited 
+proportionally to once. This is because during the first iteration of the 
+while loop where every cell is added to the queue every node is 
+checked with the maze visit function, which has a TC of O(n) the first 
+time it's called. Then for every iteration thereafter it has a time complexity 
+of O(1). And in the event that the vertex has found the end of the maze, then 
+the MazeMarkPath function is called, which also has a TC of O(n) the first time.
+However, it isn't possible for an iteration to cycle through both functions for
+the first time. Therefore, the exact TC would be O(3n) for adding the TC of the
+MazeVisit and MazeMarkPath functions along with O(1) for the rest of the nodes
+in the while loop. This eventually simplifies down to O(n) as n gets large the
+coefficient becomes negligable.
+
+============
+  solveDfs
+============
+
+- Worst case time complexity: O(n)
+
+- Explanation: The depth first search has the same worst case complexity as 
+breadthe first search given how the only deviation is the order in which the 
+nodes are traversed. Thus, the same while loop is called with ever node being 
+added to the stack in the worst case scenario. Where, during the first iteration
+of that loop the MazeVisit fucntion is called with a time complexity of O(n).
+But like the breadth first search ever other node in the while loop has a 
+constant time complexity. When, that MazeVisit function finally returns true it
+can't possibly be in the case of when it's TC was O(n) because the source cannot
+be the same as the exit. When it returns true though, it calls the MazeMarkPath
+function where the first run TC is O(n), adding another O(n) to the net TC of
+the function. For the rest of the O(n) of the function the function runs with a
+constant TC, adding one more O(n-2). However, as n gets large the TC results in
+O(n).
+
