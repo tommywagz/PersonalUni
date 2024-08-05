@@ -1,0 +1,62 @@
+Empirical Analysis of sortIntList
+
+Input      Initial    Number     Avg Time           Avg Time
+Size       Order      of Runs    for sortIntList    for sort
+
+10000      random     5          0.305              0.000
+20000      random     5          1.264              0.000
+40000      random     5          5.556              0.008
+80000      random     5          23.87              0.018
+100000     random     5          36.87              0.026
+
+10000      sorted     5          0.532              0.000
+20000      sorted     5          2.074              0.000
+40000      sorted     5          8.440              0.000
+80000      sorted     5          33.90              0.010
+100000     sorted     5          49.11              0.016
+
+10000      reverse    5          0.008              0.000
+20000      reverse    5          0.012              0.000
+40000      reverse    5          0.030              0.000
+80000      reverse    5          0.046              0.010
+100000     reverse    5          0.065              0.010
+
+More rows:
+
+120000     random     3          57.40              0.044
+150000     random     3          85.36              0.067
+200000     random     3          172.7              0.088
+
+120000     sorted     3          76.73              0.020
+150000     sorted     3          119.8              0.030
+200000     sorted     3          216.1              0.038
+
+120000     reverse    3          0.076              0.020
+150000     reverse    3          0.095              0.025
+200000     reverse    3          0.130              0.038
+
+
+Explanation of timing results:
+
+By graphing all of the data given the number of inputs, we
+can see that for the reverse sorted sequence, as the size of 
+the input sequence gets large, that the time taken to sort 
+the sequence increases linearly. Of the given sizes of the 
+randomly generated sequence, the user time graph resembles that of an 
+exponential model. This is due to the fact that the function that 
+makes a sorted copy in sortIntList calls another frunction that places
+every value in the original list into a new list in ascending order.
+
+The sorted sequence consistently takes the longest time regardless of 
+input length because each and every time a number is added to the new 
+list, the new list has to be iterated to the very end where the new 
+value is placed. In the case of the reverse ordered sequence, the
+new list is perfectly aligned where the new list doesn't have to 
+iterated through at all. This is because the value being added will 
+always be less than the head data of the new list that will be 
+returned. The original list will also only be iterated through once.
+This leads to the random sequence. The original sequence only gets 
+iterated through once regardless of the order of the values. 
+Because of this, there is an average of a fifty-fifty chance that the
+new list will have to be iterated through to the next value.
+

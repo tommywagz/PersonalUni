@@ -1,0 +1,53 @@
+
+NOTE:
+- Your time complexities should be expressed in big-O notation and be in
+  terms of either:
+  - n, where n is the number of nodes in the tree, or
+  - h, where h is the height of the tree
+
+=================
+  bstNumLeaves
+=================
+
+- Worst case time complexity: O(n)
+
+- Explanation: In the worst case scenario, every single one of the BST's
+nodes will be iterated through in order to locate all of the leaves. The 
+function of counting them will take a constant amount of work, thus the work 
+is directly proportional to 'n'.
+
+=================
+    bstRange
+=================
+
+- Worst case time complexity: O(h)
+
+- Explanation: Not every node has to be searched through in order to find
+the total range. However, the program does have to iterate through what is
+proportional to be the max height of the tree. It will have to be done twice,
+however as the height of the list becomes large the coefficient of 2 becomes 
+irrelevent.
+
+=================
+ bstDeleteLeaves
+=================
+
+- Worst case time complexity: O(n)
+
+- Explanation: In the worst case of deleting all of the leaves, every node 
+will have to be iterated through, making it proportional to O(n). This is 
+because, in order to iterate all the way to down to every leaf, the program
+will inevitably check if every node to see if there is another subtree to 
+iterate through.
+
+=================
+  bstLevelOrder
+=================
+
+- Worst case time complexity: O(n)
+
+- Explanation: Similar to the delete leaves function, the level order function
+also has a time complexity of O(n) due to the fact that every node will have
+to be iterated through. 
+
+

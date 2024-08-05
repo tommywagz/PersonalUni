@@ -1,0 +1,51 @@
+Theoretical Analysis of IntListInsertInOrder
+
+NOTE: Your time complexities should be in terms of n, where n is the
+      size of the given list.
+
+---------
+Best Case
+---------
+
+Best case time complexity: O(1)
+
+Explanation: 
+In the best case scenario, the while loop on line 146 only has a time
+complexity of 1. Every other line in the program has a time complexity
+of 1. Therefore, there is a constant amount of "units of effort" in
+the program, resulting a time complexity of O(1); 
+
+
+----------
+Worst Case
+----------
+
+Worst case time complexity: O(n)
+
+Explanation: 
+In the worst case scenario, the entire linked list has to be iterated
+through because the value being added is greater than every other
+value in the list. This leads to the time complexity depending on the 
+length of the list "n". Because the rest of the prgram runs at a 
+constant amount of "units of effort". However, when the linked list
+approaches a large length, then the constant values are ignored. This
+leaves a time complexity of O(n).
+
+
+------------
+Average Case
+------------
+
+Average case time complexity: O(n)
+
+Explanation: 
+In the average case, the linked list will be iterated through around
+halfway through the length of the list at around "n/2". However, 
+simimlar to the worst case scenario, the list could approach some 
+large lengths to the point where the constant amount of "units of 
+work" are negligable. Furthermore, the n/2 would eventually be 
+reduced to n in the event that the length of the list is so large that
+the 1/2 becomes negligable as well.
+
+
+
