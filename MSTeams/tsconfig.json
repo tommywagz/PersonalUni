@@ -8,7 +8,8 @@
       "lib": ["es6"],
       "target": "es5",
       "ignoreDeprecations": "5.0",
-      "suppressImplicitAnyIndexErrors": true
+      "suppressImplicitAnyIndexErrors": true,
+      "typeRoots": ["./node_modules/@types", "./types"]
     },
     "exclude": [
       "**/**_broken.ts"
