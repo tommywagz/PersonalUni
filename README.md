@@ -1,5 +1,5 @@
 # PersonalUni
-Projects done over the course of uni along with personal projects 
+Simple Low Grad Uni Labs and Assignments
 
 Going chronologically from 1st year to present from Nim to Movies
 
